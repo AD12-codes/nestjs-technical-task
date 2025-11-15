@@ -1,0 +1,32 @@
+{
+  "name": "nestjs-technical-task",
+  "version": "0.0.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "test-producer": "tsx ./test-producer.ts",
+    "format": "biome format --write .",
+    "lint": "biome lint .",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:ps": "docker-compose ps",
+    "dev:event-monitor": "pnpm --filter event-monitor run start:dev",
+    "build:event-monitor": "pnpm --filter event-monitor run build",
+    "test:event-monitor": "pnpm --filter event-monitor run test"
+  },
+  "private": true,
+  "dependencies": {
+    "kafkajs": "2.2.4",
+    "mongodb": "^7.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.5",
+    "@nestjs/cli": "^11.0.10",
+    "@types/node": "22.13.1",
+    "tslib": "2.8.1",
+    "tsx": "4.19.3",
+    "typescript": "5.8.2"
+  }
+}
