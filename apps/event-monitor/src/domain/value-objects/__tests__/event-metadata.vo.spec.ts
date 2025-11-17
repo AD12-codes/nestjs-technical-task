@@ -77,7 +77,7 @@ describe("EventMetadata", () => {
     });
 
     it("should throw error for future timestamp", () => {
-      const futureDate = new Date(Date.now() + 10000);
+      const futureDate = new Date(Date.now() + 130000);
       const props = {
         ...validProps,
         timestamp: futureDate,

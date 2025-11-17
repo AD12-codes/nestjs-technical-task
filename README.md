@@ -1,6 +1,6 @@
 # Event Monitor Microservice
 
-A NestJS microservice for monitoring system events from Kafka and storing notifications in MongoDB, built with Domain-Driven Design principles.
+A NestJS microservice that consumes Kafka events, checks for limit violations, and stores notifications in MongoDB when limits are exceeded. Built with Domain-Driven Design (DDD) principles.
 
 ## 🚀 Tech Stack
 
@@ -23,7 +23,7 @@ nestjs-technical-task/
 │           ├── application/        # Use cases & orchestration
 │           ├── infrastructure/     # Database, messaging, config
 │           └── presentation/       # Controllers & HTTP layer
-├── packages/                       # Shared libraries (future)
+│       └── Dockerfile              # Dockerfile for the application
 ├── docker-compose.yml              # Infrastructure setup
 └── pnpm-workspace.yaml             # Monorepo configuration
 ```
@@ -36,33 +36,37 @@ nestjs-technical-task/
 
 ## 📦 Installation & Running
 
-### Clone Repository
+### Quick Start (Docker - Recommended)
 
 ```bash
+# Clone repository
 git clone https://github.com/AD12-codes/nestjs-technical-task.git
 cd nestjs-technical-task
-```
 
-### Install Dependencies
-
-```bash
+# Install dependencies (for scripts)
 pnpm install
+
+# Start EVERYTHING with one command 🚀
+pnpm docker:up-all
 ```
 
-### Start with Docker
-
-```bash
-# Start infrastructure (MongoDB + Mongo Express)
-pnpm docker:up
-
-# Start application
-pnpm dev:event-monitor
-```
+That's it! The entire stack (MongoDB, Kafka, and App) is now running.
 
 **Services:**
-- Application: http://localhost:3000
-- Mongo Express: http://localhost:8081 (admin/admin123)
-- MongoDB: localhost:27017
+- **Application:** http://localhost:3000
+- **Health Check:** http://localhost:3000/health
+- **Kafka UI:** http://localhost:8080
+- **Mongo Express:** http://localhost:8081 (admin/admin123)
+
+### Local Development Mode
+
+```bash
+# Start infrastructure only
+pnpm docker:up
+
+# Start application locally (with hot reload)
+pnpm dev:event-monitor
+```
 
 ### Available Commands
 
@@ -72,10 +76,17 @@ pnpm dev:event-monitor       # Start dev server
 pnpm build:event-monitor     # Build for production
 
 # Docker
-pnpm docker:up               # Start all services
+pnpm docker:up-all           # Start EVERYTHING (recommended)
+pnpm docker:up               # Start infrastructure only
 pnpm docker:down             # Stop all services
-pnpm docker:logs             # View logs
+pnpm docker:logs             # View all logs
+pnpm docker:app-logs         # View app logs only
 pnpm docker:ps               # List containers
+
+# Testing
+pnpm test:event-monitor      # Run unit tests
+pnpm test:e2e                # Run E2E tests
+pnpm test-producer           # Send test events
 
 # Code Quality
 pnpm check:fix               # Format & lint
@@ -88,7 +99,3 @@ curl http://localhost:3000/health        # Overall health
 curl http://localhost:3000/health/ready  # Readiness probe
 curl http://localhost:3000/health/live   # Liveness probe
 ```
-
-## 📄 License
-
-UNLICENSED
