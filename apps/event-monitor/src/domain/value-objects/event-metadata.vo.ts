@@ -59,9 +59,9 @@ export class EventMetadata extends BaseValueObject<EventMetadataProps> {
 
     const now = new Date();
     const timestamp = new Date(props.timestamp);
-    const fiveSecondsFromNow = new Date(now.getTime() + 5000);
+    const twoMinutesFromNow = new Date(now.getTime() + 120000);
 
-    if (timestamp > fiveSecondsFromNow) {
+    if (timestamp > twoMinutesFromNow) {
       throw new Error("Event timestamp cannot be in the future");
     }
 

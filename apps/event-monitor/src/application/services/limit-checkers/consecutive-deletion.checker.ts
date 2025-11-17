@@ -16,7 +16,7 @@ export class ConsecutiveDeletionChecker implements ILimitChecker {
     private readonly eventStorage: EventStorageService,
     private readonly configService: ConfigService,
   ) {
-    this.REQUIRED_DELETIONS = this.configService.get<number>("LIMIT_CONSECUTIVE_DELETIONS", 3);
+    this.REQUIRED_DELETIONS = Number(this.configService.get("LIMIT_CONSECUTIVE_DELETIONS", 3));
   }
 
   getName(): string {

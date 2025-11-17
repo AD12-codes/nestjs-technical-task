@@ -17,9 +17,9 @@ export class UserUpdateWindowChecker implements ILimitChecker {
     private readonly eventStorage: EventStorageService,
     private readonly configService: ConfigService,
   ) {
-    const windowMinutes = this.configService.get<number>("LIMIT_UPDATE_WINDOW_MINUTES", 1);
+    const windowMinutes = Number(this.configService.get("LIMIT_UPDATE_WINDOW_MINUTES", 1));
     this.WINDOW_MS = windowMinutes * 60 * 1000;
-    this.REQUIRED_UPDATES = this.configService.get<number>("LIMIT_UPDATE_WINDOW_COUNT", 2);
+    this.REQUIRED_UPDATES = Number(this.configService.get("LIMIT_UPDATE_WINDOW_COUNT", 2));
   }
 
   getName(): string {
