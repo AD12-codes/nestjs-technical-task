@@ -4,13 +4,6 @@ export enum LimitType {
   TWO_USER_UPDATES_IN_ONE_MINUTE = "2_USER_UPDATED_IN_1MINUTE",
 }
 
-export enum NotificationStatus {
-  PENDING = "PENDING",
-  SENT = "SENT",
-  READ = "READ",
-  ARCHIVED = "ARCHIVED",
-}
-
 export type EventArea = "user" | "payment" | "top-secret";
 
 export type EventAction = "create" | "read" | "update" | "delete";

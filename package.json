@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "UNLICENSED",
   "scripts": {
-    "test-producer": "tsx ./test-producer.ts",
+    "test-producer": "KAFKA_BROKERS=localhost:9092 tsx test-producer.ts",
     "format": "biome format --write .",
     "lint": "biome lint .",
     "check": "biome check .",
@@ -12,6 +12,8 @@
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
     "docker:ps": "docker-compose ps",
+    "kafka:logs": "docker-compose logs -f kafka",
+    "kafka:ui": "open http://localhost:8080",
     "dev:event-monitor": "pnpm --filter event-monitor run start:dev",
     "build:event-monitor": "pnpm --filter event-monitor run build",
     "test:event-monitor": "pnpm --filter event-monitor run test"

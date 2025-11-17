@@ -1,4 +1,4 @@
-import type { CheckSystemHealthUseCase } from "@application/use-cases/check-system-health.use-case";
+import { CheckSystemHealthUseCase } from "@application/use-cases/check-system-health.use-case";
 import { Controller, Get } from "@nestjs/common";
 
 @Controller("health")

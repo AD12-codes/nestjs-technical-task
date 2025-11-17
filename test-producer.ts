@@ -31,20 +31,34 @@ async function runProducer() {
 
   await producer.connect();
 
-  for (;;) {
+  const MESSAGE_COUNT = 1000;
+  const USER_ID_MIN = 4000;
+  const USER_ID_MAX = 5000;
+
+  console.log(`\n Load Test Configuration:`);
+  console.log(`   - Messages: ${MESSAGE_COUNT}`);
+  console.log(`   - User ID Range: ${USER_ID_MIN}-${USER_ID_MAX}`);
+  console.log(`   - Topic: user-events`);
+  console.log(
+    `\nThis range (4000-5000) differentiates load test data from deterministic tests (users 1-100).\n`,
+  );
+
+  for (let i = 0; i < MESSAGE_COUNT; i++) {
     const resource = RESOURCES.at(randomInt(0, RESOURCES.length));
     const action = ACTIONS.at(randomInt(0, ACTIONS.length));
 
     const message = {
-      userId: randomInt(1, 101),
+      userId: randomInt(USER_ID_MIN, USER_ID_MAX + 1),
       scope: `${resource}.${action}`,
       date: new Date(),
     };
 
-    console.log("Publishing message:", message);
+    if (i % 100 === 0) {
+      console.log(`Progress: ${i}/${MESSAGE_COUNT} messages sent...`);
+    }
 
     await producer.send({
-      topic: "test.events.system",
+      topic: "user-events",
       messages: [
         {
           value: JSON.stringify(message),
@@ -53,7 +67,13 @@ async function runProducer() {
       ],
     });
 
-    // Delay between messages
-    await setTimeout(randomInt(10, 500));
+    // Small delay between messages
+    await setTimeout(randomInt(10, 50));
   }
+
+  console.log(`\nLoad test complete! Sent ${MESSAGE_COUNT} messages.`);
+  console.log(`\nCheck MongoDB notifications collection for any randomly triggered limits.`);
+  console.log(`Query: db.notifications.find({ userId: { $gte: "4000", $lte: "5000" } })\n`);
+
+  await producer.disconnect();
 }
