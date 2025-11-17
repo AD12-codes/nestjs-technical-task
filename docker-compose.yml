@@ -31,9 +31,8 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD:-password123}@mongodb:27017/
       ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USERNAME:-admin}
       ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD:-admin123}
-      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
     ports:
-      - "${MONGO_EXPRESS_PORT:-8081}:8081"
+      - "8081:8081"
     networks:
       - nestjs-network
     depends_on:
@@ -100,6 +99,43 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+
+  event-monitor:
+    build:
+      context: .
+      dockerfile: apps/event-monitor/Dockerfile
+    container_name: nestjs-event-monitor
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/event_monitor?authSource=admin
+      KAFKA_BROKERS: kafka:29092
+      KAFKA_CLIENT_ID: event-monitor
+      KAFKA_TOPIC: user-events
+      LIMIT_CONSECUTIVE_DELETIONS: 3
+      LIMIT_UPDATE_WINDOW_COUNT: 2
+      LIMIT_UPDATE_WINDOW_MINUTES: 1
+    networks:
+      - nestjs-network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
 
 networks:
   nestjs-network:

@@ -12,11 +12,15 @@
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
     "docker:ps": "docker-compose ps",
+    "docker:build": "docker-compose build",
+    "docker:up-all": "docker-compose up -d --build",
+    "docker:app-logs": "docker-compose logs -f event-monitor",
     "kafka:logs": "docker-compose logs -f kafka",
     "kafka:ui": "open http://localhost:8080",
     "dev:event-monitor": "pnpm --filter event-monitor run start:dev",
     "build:event-monitor": "pnpm --filter event-monitor run build",
-    "test:event-monitor": "pnpm --filter event-monitor run test"
+    "test:event-monitor": "pnpm --filter event-monitor run test",
+    "test:e2e": "pnpm --filter event-monitor run test:e2e"
   },
   "private": true,
   "dependencies": {
