@@ -1,9 +1,12 @@
 import type { Notification } from "@domain/entities/notification.entity";
-import type { INotificationRepository } from "@domain/repositories/notification.repository.interface";
+import type {
+  INotificationRepository,
+  NotificationFilters,
+} from "@domain/repositories/notification.repository.interface";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { notificationToPersistence } from "../mappers/notification.mapper";
+import { notificationToDomain, notificationToPersistence } from "../mappers/notification.mapper";
 import {
   NotificationDocument,
   type NotificationDocumentType,
@@ -20,5 +23,21 @@ export class MongoNotificationRepository implements INotificationRepository {
     const doc = notificationToPersistence(notification);
 
     await this.notificationModel.updateOne({ _id: doc._id }, doc, { upsert: true });
+  }
+
+  async findAll(filters?: NotificationFilters): Promise<Notification[]> {
+    const query: Record<string, unknown> = {};
+
+    if (filters?.userId) {
+      query.userId = filters.userId;
+    }
+
+    if (filters?.limitType) {
+      query.limitType = filters.limitType;
+    }
+
+    const docs = await this.notificationModel.find(query).sort({ createdAt: -1 }).exec();
+
+    return docs.map((doc) => notificationToDomain(doc));
   }
 }

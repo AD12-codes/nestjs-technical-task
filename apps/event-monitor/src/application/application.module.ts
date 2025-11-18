@@ -5,6 +5,7 @@ import { ConsecutiveDeletionChecker } from "./services/limit-checkers/consecutiv
 import { TopSecretReadChecker } from "./services/limit-checkers/top-secret-read.checker";
 import { UserUpdateWindowChecker } from "./services/limit-checkers/user-update-window.checker";
 import { LimitCheckingService } from "./services/limit-checking.service";
+import { NotificationQueryService } from "./services/notification-query.service";
 
 @Module({
   imports: [NotificationInfrastructureModule],
@@ -14,7 +15,8 @@ import { LimitCheckingService } from "./services/limit-checking.service";
     TopSecretReadChecker,
     UserUpdateWindowChecker,
     LimitCheckingService,
+    NotificationQueryService,
   ],
-  exports: [LimitCheckingService],
+  exports: [LimitCheckingService, NotificationQueryService],
 })
 export class ApplicationModule {}

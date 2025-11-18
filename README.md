@@ -92,13 +92,34 @@ pnpm test-producer           # Send test events
 pnpm check:fix               # Format & lint
 ```
 
-## 🏥 Health Check
+## 📋 API Endpoints
+
+### Health Check
 
 ```bash
 curl http://localhost:3000/health        # Overall health
-curl http://localhost:3000/health/ready  # Readiness probe
-curl http://localhost:3000/health/live   # Liveness probe
 ```
+
+### Get Notifications
+
+```bash
+# Get all notifications
+curl http://localhost:3000/notifications
+
+# Filter by userId
+curl http://localhost:3000/notifications?userId=1001
+
+# Filter by limitType
+curl http://localhost:3000/notifications?limitType=3_USER_DELETIONS
+
+# Filter by both
+curl http://localhost:3000/notifications?userId=1001&limitType=3_USER_DELETIONS
+```
+
+**Available limit types:**
+- `3_USER_DELETIONS`
+- `TOP_SECRET_READ`
+- `2_USER_UPDATED_IN_1MINUTE`
 
 ---
 
