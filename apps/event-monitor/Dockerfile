@@ -6,12 +6,13 @@ RUN npm install -g pnpm@9
 WORKDIR /app
 
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY tsconfig.base.json ./
+
 COPY apps/event-monitor/package.json ./apps/event-monitor/
 
-RUN pnpm install --frozen-lockfile
-
 COPY apps/event-monitor ./apps/event-monitor
-COPY tsconfig.base.json ./
+
+RUN pnpm install --frozen-lockfile
 
 RUN pnpm --filter event-monitor run build
 
@@ -23,6 +24,7 @@ RUN npm install -g pnpm@9
 WORKDIR /app
 
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+
 COPY apps/event-monitor/package.json ./apps/event-monitor/
 
 RUN pnpm install --frozen-lockfile --prod
