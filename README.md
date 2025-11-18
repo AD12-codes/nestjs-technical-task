@@ -99,3 +99,45 @@ curl http://localhost:3000/health        # Overall health
 curl http://localhost:3000/health/ready  # Readiness probe
 curl http://localhost:3000/health/live   # Liveness probe
 ```
+
+---
+
+## 🏗️ Architecture & Design Decisions
+
+### Domain-Driven Design (DDD)
+- **Layered Architecture**: Clear separation (domain → application → infrastructure → presentation)
+- **Domain First**: Business logic isolated from frameworks and external dependencies
+- **Value Objects**: Immutable entities like `UserId`, `EventMetadata`, `NotificationId`
+
+### Event Processing
+- **In-Memory Storage**: `EventStorageService` keeps recent events per user for fast limit checks
+- **Strategy Pattern**: Each limit checker (`ILimitChecker`) is independent and pluggable
+
+### Database Design
+
+**Notifications Collection:**
+```typescript
+{
+  _id: ObjectId,
+  userId: string,             // Indexed for fast user queries
+  limitType: string,          // "3_USER_DELETIONS" | "TOP_SECRET_READ" | "2_USER_UPDATED_IN_1MINUTE"
+  message: string,            // Human-readable description
+  eventMetadata: {
+    area: string,             // "user" | "payment" | "top-secret"
+    action: string,           // "create" | "read" | "update" | "delete"
+    timestamp: Date
+  },
+  createdAt: Date,            // Auto-indexed for time-based queries
+}
+```
+
+**Indexes:**
+- `userId` - Fast user-specific notification lookup
+- `limitType` - Fast limit-specific notification lookup
+- `createdAt` - Time-range queries and sorting
+
+---
+
+## 📚 Additional Documentation
+
+- [TECHNICAL-TASK.md](./TECHNICAL-TASK.md) - Original requirements
